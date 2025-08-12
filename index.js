@@ -4,7 +4,6 @@ const app = express()
 const port = 3000
 
 app.get("/Users", (request, response)=> {
-    // response.send("Welcome User");
     response.json({
         "Users":[
             {"name": "Joshua", "age": "12", "food": "rice and beans"},
