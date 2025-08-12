@@ -4,6 +4,7 @@ const app = express()
 const port = 3000
 
 app.get("/Users", (request, response)=> {
+    // response.send("Welcome User");
     response.json({
         "Users":[
             {"name": "Joshua", "age": "12", "food": "rice and beans"},
@@ -14,6 +15,22 @@ app.get("/Users", (request, response)=> {
             {"name": "Victoria", "age": "17", "food": "Pasta"},
         ]
     })
+})
+
+app.get("/", (req, res) => {
+res.render("index", {name:"Joshua", age: "12", food: "rice and beans"})
+})
+
+app.get("/signup", (req, res) => {
+res.render("signup")
+})
+
+app.get("/login", (req, res) => {
+    res.render("login")
+    })
+
+app.get("/todo", (req, res) => {
+    res.render("todo", {todo:alltodo})
 })
 
 app.listen(port, () => { 
