@@ -4,32 +4,33 @@ const ejs = require("ejs")
 
 let alluser = []
 let alltodo = []
+currentUser = ""
 
 
 app.use(express.urlencoded({ extended: true }))
 app.set("view engine", "ejs")
 
 
-app.get("/", (request, response) => {
-    response.json({
-        "Users": [
-            {"id":"1", "name":"Ugonna", "age":"12", "food":"Akpu"},
-            {"id":"2", "name":"feranmi", "age":"16", "food":"rice"},
-            {"id":"3", "name":"emmanuel", "age":"14", "food":"spag"},
-            {"id":"4", "name":"ezekiel", "age":"15", "food":"garri"},
-            {"id":"5", "name":"folarin", "age":"16", "food":"pounded yam"},
-            {"id":"6", "name":"ayo", "age":"17", "food":"spag"},
-            {"id":"7", "name":"al-wajud", "age":"19", "food":"beans"},
-            {"id":"8", "name":"joshua", "age":"18", "food":"rice and beans"},
-            {"name": "Joshua", "age": "12", "food": "rice and beans"},
-            {"name": "Adekunle", "age": "13", "food": "bread and beans"},
-            {"name": "Kayode", "age": "14", "food": "beans"},
-            {"name": "David", "age": "15", "food": "rice"},
-            {"name": "Anuoluwapo", "age": "16", "food": "Spaghetti"},
-            {"name": "Victoria", "age": "17", "food": "Pasta"}
-        ]
-    })
-})
+// app.get("/", (request, response) => {
+//     response.json({
+//         "Users": [
+//             {"id":"1", "name":"Ugonna", "age":"12", "food":"Akpu"},
+//             {"id":"2", "name":"feranmi", "age":"16", "food":"rice"},
+//             {"id":"3", "name":"emmanuel", "age":"14", "food":"spag"},
+//             {"id":"4", "name":"ezekiel", "age":"15", "food":"garri"},
+//             {"id":"5", "name":"folarin", "age":"16", "food":"pounded yam"},
+//             {"id":"6", "name":"ayo", "age":"17", "food":"spag"},
+//             {"id":"7", "name":"al-wajud", "age":"19", "food":"beans"},
+//             {"id":"8", "name":"joshua", "age":"18", "food":"rice and beans"},
+//             {"name": "Joshua", "age": "12", "food": "rice and beans"},
+//             {"name": "Adekunle", "age": "13", "food": "bread and beans"},
+//             {"name": "Kayode", "age": "14", "food": "beans"},
+//             {"name": "David", "age": "15", "food": "rice"},
+//             {"name": "Anuoluwapo", "age": "16", "food": "Spaghetti"},
+//             {"name": "Victoria", "age": "17", "food": "Pasta"}
+//         ]
+//     })
+// })
 
 app.get("/user", (req, res) => {
     res.render("index", { name: "Lola", gender: "male" })
@@ -44,7 +45,7 @@ app.get("/login", (req, res) => {
 })
 
 
-app.get("/todo", (req, res) => {
+app.get("/", (req, res) => {
     res.render("todo", { todo: alltodo })
 })
 
@@ -59,6 +60,8 @@ app.get("/edit/:index", (req, res) => {
 })
 
 app.post("/todo/edit/:index", (req, res) => {
+    console.log(req.body, "new information")
+    console.log(req.params, "old information")
     const { index } = req.params
     const { title, description } = req.body
     if (index >= 0 && index < alltodo.length) {
@@ -69,6 +72,13 @@ app.post("/todo/edit/:index", (req, res) => {
 
 app.post("/user/signup", (req, res) => {
     alluser.push(req.body)
+    if (alluser.length > 0) {
+        console.log("Signup successful")
+        res.redirect("/login")
+    }
+    else {
+        console.log("Signup failed")
+    }
     res.redirect("/login")
 })
 
@@ -77,9 +87,11 @@ app.post("/user/login", (req, res) => {
     const existuser = alluser.find((user) => user.email === email)
     if (existuser && existuser.password === password) {
         console.log("Login successful")
+        currentUser = existuser.email
+        console.log("Current User:", currentUser)
         res.redirect("/")
     } else {
-        console.log("Invalid user")
+        console.log("Login failed")
         res.redirect("/login")
     }
 })
